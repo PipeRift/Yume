@@ -20,6 +20,7 @@ namespace Crab.Events
         public Vector3 size;
         public LayerMask affectedLayers;
 
+        public bool firedByColliders = true;
         public bool debug = true;
 
         void OnEnable() {
@@ -30,23 +31,29 @@ namespace Crab.Events
         }
 
         void OnTriggerEnter(Collider col) {
-            if (IsInLayerMask(col.gameObject, affectedLayers)) {
-
-                eventsFired.ForEach(x => {
-                    if (x && x.isActiveAndEnabled) x.SendMessage("StartEvent");
-                });
-                eventsFinished.ForEach(x => {
-                    if (x && x.isActiveAndEnabled) x.SendMessage("FinishEvent");
-                });
+            if (firedByColliders && IsInLayerMask(col.gameObject, affectedLayers)) {
+                Fire();
             }
         }
 
+        //Start all the events
+        public void Fire() {
+            eventsFired.ForEach(x => {
+                if (x && x.isActiveAndEnabled) x.SendMessage("StartEvent");
+            });
+            eventsFinished.ForEach(x => {
+                if (x && x.isActiveAndEnabled) x.SendMessage("FinishEvent");
+            });
+        }
+
+        
+        //Handlers
         private bool IsInLayerMask(GameObject obj, LayerMask layerMask) {
             return (layerMask.value & (1 << obj.layer)) > 0;
         }
+        
 
-
-        //Render Event Conections
+        //Render Event Connections
         void OnDrawGizmos() {
             if (!debug)
                 return;
@@ -66,6 +73,7 @@ namespace Crab.Events
             Gizmos.color = gizmosColor;
         }
     }
+
 
 
     #if UNITY_EDITOR
@@ -111,10 +119,13 @@ namespace Crab.Events
         {
             t = target as Trigger;
 
-            //Find Collider or Create it
-            t.tCollider = t.GetComponent<Collider>();
-            UpdateCollider();
-            t.tCollider.isTrigger = true;
+            if (t.firedByColliders)
+            {
+                //Find Collider or Create it
+                t.tCollider = t.GetComponent<Collider>();
+                UpdateCollider();
+                t.tCollider.isTrigger = true;
+            }
         }
 
         public override void OnInspectorGUI() {
@@ -135,6 +146,7 @@ namespace Crab.Events
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
+            t.firedByColliders = EditorGUILayout.Toggle("Fired By Colliders", t.firedByColliders);
             t.debug = EditorGUILayout.Toggle("Debug", t.debug);
             EditorGUILayout.LabelField("Don't edit the collider.", EditorStyles.boldLabel);
 
@@ -142,8 +154,11 @@ namespace Crab.Events
 
             if (GUI.changed)
             {
-                t.tCollider.isTrigger = true;
-                UpdateCollider();
+                if(t.firedByColliders)
+                {
+                    t.tCollider.isTrigger = true;
+                    UpdateCollider();
+                }
 
                 EditorUtility.SetDirty(target);
             }

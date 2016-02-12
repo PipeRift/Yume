@@ -14,7 +14,7 @@ namespace Crab
         public Vector3 offset;
         public float updateRate = 0.25f;
         public bool testHeight = false;
-        [Space()]
+        //[Space()]
         public VisibleFilter filter;
 
         [Header("Debug")]

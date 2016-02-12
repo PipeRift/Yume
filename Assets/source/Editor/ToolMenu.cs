@@ -65,7 +65,7 @@ public class ToolMenu : EditorWindow
         if (itemTypes == null) UpdateItems();
 
 
-        titleContent = new GUIContent("Crab Tools");
+        GUIContent titleContent = new GUIContent("Crab Tools");
 
         foldOutStyle.fontStyle = FontStyle.Bold;
 

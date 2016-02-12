@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -19,6 +20,8 @@ namespace Crab
         public bool entitiesCanPick = false;
 
         public float radius = 0.3f;
+
+        public PickUpEvent OnPickUp;
         
 
         void Start()
@@ -53,6 +56,7 @@ namespace Crab
 
         void PickUp(Entity entity)
         {
+            OnPickUp.Invoke(entity);
             UnityEngine.Debug.Log("Picked Up an Item!");
         }
 
@@ -66,11 +70,14 @@ namespace Crab
             {
                 if ((entitiesCanPick && entity.IsAI()) || (playersCanPick && entity.IsPlayer()))
                 {
-                    SendMessage("PickUp", entity);
+                    PickUp(entity);
                     GameObject.Destroy(gameObject);
                 }
             }
         }
+
+        [System.Serializable]
+        public class PickUpEvent : UnityEvent<Entity> {}
     }
 }
 

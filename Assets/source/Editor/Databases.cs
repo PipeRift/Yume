@@ -29,7 +29,7 @@ public class Databases : EditorWindow
     }
 
     void OnGUI() {
-        titleContent = new GUIContent("Crab Databases");
+        GUIContent titleContent = new GUIContent("Crab Databases");
 
         if (GUILayout.Button((showFactions ? "↖ " : "↓ ") + "Factions", EditorStyles.boldLabel)) {
             showFactions = !showFactions;

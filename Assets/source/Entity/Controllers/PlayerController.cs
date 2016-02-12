@@ -11,14 +11,17 @@ namespace Crab.Controllers
         private CMovement movement;
         private new CameraMovement camera;
         private TouchManager touch = new TouchManager();
-        private Vector3 touchPosition;
+        private Vector3 touchPos;
+        private CameraController camControl;
 
         void Awake()
         {
             me = GetComponent<Entity>();
+            camControl = Cache.Get.cameraController;
             movement = me.Movement;
             touch.OnSwipe += OnSwipe;
             touch.OnTouch += OnTouch;
+
         }
 
         void Update()
@@ -42,13 +45,13 @@ namespace Crab.Controllers
 
         //Touch Movement
         void OnTouch(Vector3 touchPosition) {
-            UnityEngine.Debug.Log("Move here!");
-            Ray ray = Cache.Get.cameraController.cam.ScreenPointToRay(touchPosition);
+            Ray ray = camControl.cam.ScreenPointToRay(touchPosition);
 
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, LayerMask.NameToLayer("Terrain")))
+            if (Physics.Raycast(ray, out hit, 100))
             {
-                this.touchPosition = touchPosition;
+                touchPos = hit.point;
+                movement.AIMove(hit.point);
             }
         }
 
@@ -65,12 +68,12 @@ namespace Crab.Controllers
         }
 
         //DEBUG
-        void OnDrawGizmosSelected()
+        void OnDrawGizmos()
         {
-            if(touchPosition != Vector3.zero)
+            if(touchPos != Vector3.zero)
             {
                 Gizmos.color = Color.yellow;
-                Gizmos.DrawSphere(transform.position, 0.25f);
+                Gizmos.DrawSphere(touchPos, 0.25f);
             }
         }
     }
