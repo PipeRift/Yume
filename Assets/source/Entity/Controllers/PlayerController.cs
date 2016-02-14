@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Crab;
+using Crab.Events;
 using Crab.Components;
 
 namespace Crab.Controllers
@@ -51,6 +51,15 @@ namespace Crab.Controllers
             if (Physics.Raycast(ray, out hit, 100))
             {
                 touchPos = hit.point;
+
+                EDoor door = hit.collider.GetComponentInParent<EDoor>();
+                if (door)
+                {
+                    if (door.IsEnabled())
+                        door.StartEvent();
+                    return;
+                }
+
                 movement.AIMove(hit.point);
             }
         }

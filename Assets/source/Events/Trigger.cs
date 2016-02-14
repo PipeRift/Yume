@@ -17,6 +17,7 @@ namespace Crab.Events
 
         public List<Crab.Event> eventsFired = new List<Crab.Event>();
         public List<Crab.Event> eventsFinished = new List<Crab.Event>();
+        public List<Crab.Event> eventsEnabled = new List<Crab.Event>();
         public Vector3 size;
         public LayerMask affectedLayers;
 
@@ -40,6 +41,9 @@ namespace Crab.Events
         public void Fire() {
             eventsFired.ForEach(x => {
                 if (x && x.isActiveAndEnabled) x.SendMessage("StartEvent");
+            });
+            eventsEnabled.ForEach(x => {
+                if (x && x.isActiveAndEnabled) x.Enable();
             });
             eventsFinished.ForEach(x => {
                 if (x && x.isActiveAndEnabled) x.SendMessage("FinishEvent");
@@ -65,6 +69,11 @@ namespace Crab.Events
                 if (x) Gizmos.DrawLine(transform.position, x.transform.position);
             });
 
+            Gizmos.color = Color.blue;
+            eventsEnabled.ForEach(x => {
+                if (x) Gizmos.DrawLine(transform.position, x.transform.position);
+            });
+
             Gizmos.color = Color.green;
             eventsFired.ForEach(x => {
                 if (x) Gizmos.DrawLine(transform.position, x.transform.position);
@@ -83,13 +92,14 @@ namespace Crab.Events
         protected Trigger t;
         private ReorderableList firedEvents;
         private ReorderableList finishedEvents;
+        private ReorderableList enabledEvents;
 
         private void OnEnable() {
             firedEvents = new ReorderableList(serializedObject,
                     serializedObject.FindProperty("eventsFired"),
                     true, true, true, true);
             firedEvents.drawHeaderCallback = (Rect rect) => {
-                EditorGUI.LabelField(rect, "Fired Events");
+                EditorGUI.LabelField(rect, "Started Events");
             };
             firedEvents.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
                 var element = firedEvents.serializedProperty.GetArrayElementAtIndex(index);
@@ -108,6 +118,21 @@ namespace Crab.Events
             };
             finishedEvents.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
                 var element = finishedEvents.serializedProperty.GetArrayElementAtIndex(index);
+                rect.y += 2;
+                EditorGUI.PropertyField(
+                    new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
+                    element, GUIContent.none);
+            };
+
+
+            enabledEvents = new ReorderableList(serializedObject,
+                    serializedObject.FindProperty("eventsEnabled"),
+                    true, true, true, true);
+            enabledEvents.drawHeaderCallback = (Rect rect) => {
+                EditorGUI.LabelField(rect, "Enabled Events");
+            };
+            enabledEvents.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) => {
+                var element = enabledEvents.serializedProperty.GetArrayElementAtIndex(index);
                 rect.y += 2;
                 EditorGUI.PropertyField(
                     new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight),
@@ -137,12 +162,9 @@ namespace Crab.Events
             UpdateGUI();
 
             
-            //EditorGUILayout.LabelField("Fires Event", EditorStyles.largeLabel);
             firedEvents.DoLayoutList();
-            
-            //EditorGUILayout.LabelField("Finishes Event", EditorStyles.largeLabel);
             finishedEvents.DoLayoutList();
-
+            enabledEvents.DoLayoutList();
 
             EditorGUILayout.Space();
             EditorGUILayout.Space();
