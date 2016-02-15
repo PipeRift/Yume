@@ -48,7 +48,7 @@ namespace Crab.Controllers
             Ray ray = camControl.cam.ScreenPointToRay(touchPosition);
 
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            if (Physics.Raycast(ray, out hit, 100, ~(1 << LayerMask.NameToLayer("Dissolved"))))
             {
                 touchPos = hit.point;
 

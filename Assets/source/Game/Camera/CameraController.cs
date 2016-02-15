@@ -29,7 +29,7 @@ public class CameraController : MonoBehaviour
         //Set height
         PlayerController player = Cache.Get.player;
         Vector3 position = transform.position;
-        position.y = player.transform.position.y;
+        position.y = player.transform.position.y + yOffset;
         transform.position = position;
     }
 

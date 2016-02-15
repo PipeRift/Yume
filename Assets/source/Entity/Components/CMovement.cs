@@ -137,6 +137,15 @@ namespace Crab.Components {
             return agent.destination == agentTarget.position;
         }
 
+        public bool IsInside() {
+            NavMeshHit navMeshHit;
+            if (NavMesh.SamplePosition(transform.position, out navMeshHit, 0.1f, 1 << NavMesh.GetAreaFromName("Inside")))
+            {
+                return true;
+            }
+            return false;
+        }
+
         /**
          * Crouch
          */
