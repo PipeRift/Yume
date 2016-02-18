@@ -59,12 +59,13 @@ namespace Crab.Controllers
                 touchPos = hit.point;
 
                 Event _event = hit.collider.GetComponentInParent<Event>();
-                if (_event)
+                if (_event && _event.IsEnabled())
                 {
-                    if (_event.IsEnabled())
-                    {
-                        _touchTarget = _event;
-                    }
+                    _touchTarget = _event;
+                }
+                else
+                {
+                    _touchTarget = null;
                 }
 
                 movement.AIMove(hit.point);
