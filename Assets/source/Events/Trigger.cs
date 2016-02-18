@@ -22,6 +22,7 @@ namespace Crab.Events
         public LayerMask affectedLayers;
 
         public bool firedByColliders = true;
+        public bool checkTouchTarget = false;
         public bool debug = true;
 
         void OnEnable() {
@@ -40,7 +41,11 @@ namespace Crab.Events
         //Start all the events
         public void Fire() {
             eventsFired.ForEach(x => {
-                if (x && x.isActiveAndEnabled) x.SendMessage("StartEvent");
+                if (x && x.isActiveAndEnabled &&
+                    x == Cache.Get.player.touchTarget)
+                {
+                    x.SendMessage("StartEvent");
+                }
             });
             eventsEnabled.ForEach(x => {
                 if (x && x.isActiveAndEnabled) x.Enable();
@@ -169,6 +174,7 @@ namespace Crab.Events
             EditorGUILayout.Space();
             EditorGUILayout.Space();
             t.firedByColliders = EditorGUILayout.Toggle("Fired By Colliders", t.firedByColliders);
+            t.checkTouchTarget = EditorGUILayout.Toggle("Check Touch Target", t.checkTouchTarget);
             t.debug = EditorGUILayout.Toggle("Debug", t.debug);
             EditorGUILayout.LabelField("Don't edit the collider.", EditorStyles.boldLabel);
 

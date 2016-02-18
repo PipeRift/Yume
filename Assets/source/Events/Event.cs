@@ -33,6 +33,7 @@
                 enabled = false;
             }
             JustStarted();
+            startEvent.Invoke();
         }
 
         public void Enable() {
@@ -47,7 +48,6 @@
         protected virtual void OnGameStart(SceneScript scene) { }
 
         protected virtual void JustStarted() {
-            startEvent.Invoke();
         }
     }
 }

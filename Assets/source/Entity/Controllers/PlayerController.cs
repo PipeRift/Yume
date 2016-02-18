@@ -11,6 +11,12 @@ namespace Crab.Controllers
         private CMovement movement;
         private new CameraMovement camera;
         private TouchManager touch = new TouchManager();
+        public Event touchTarget {
+            get {
+                return _touchTarget;
+            }
+        }
+        private Event _touchTarget;
         private Vector3 touchPos;
         private CameraController camControl;
 
@@ -52,12 +58,13 @@ namespace Crab.Controllers
             {
                 touchPos = hit.point;
 
-                EDoor door = hit.collider.GetComponentInParent<EDoor>();
-                if (door)
+                Event _event = hit.collider.GetComponentInParent<Event>();
+                if (_event)
                 {
-                    if (door.IsEnabled())
-                        door.StartEvent();
-                    return;
+                    if (_event.IsEnabled())
+                    {
+                        _touchTarget = _event;
+                    }
                 }
 
                 movement.AIMove(hit.point);
