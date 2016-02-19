@@ -3,7 +3,7 @@
     using UnityEngine;
     using UnityEngine.Events;
     using System.Collections;
-    using Crab.Events;
+    using Crab.Controllers;
 
     public class Event : MonoBehaviour
     {
@@ -34,6 +34,10 @@
             }
             JustStarted();
             startEvent.Invoke();
+
+            PlayerController player = Cache.Get.player;
+            if (player.touchTarget == this)
+                player.ResetTarget();
         }
 
         public void Enable() {

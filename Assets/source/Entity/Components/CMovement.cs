@@ -143,7 +143,7 @@ namespace Crab.Components {
             {
                 animSpeed = velocityMag/speed/2;
             }
-            animator.SetFloat("Speed", Mathf.Lerp(animator.GetFloat("Speed"), animSpeed, 12 * Time.deltaTime));
+            animator.SetFloat("Speed", Mathf.Lerp(animator.GetFloat("Speed"), animSpeed, 5 * Time.deltaTime));
 
         }
 

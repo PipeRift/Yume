@@ -54,11 +54,12 @@ namespace Crab.Controllers
             Ray ray = camControl.cam.ScreenPointToRay(touchPosition);
 
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100, ~(1 << LayerMask.NameToLayer("Dissolved"))))
+            if (Physics.Raycast(ray, out hit, 100, ~( (1 << LayerMask.NameToLayer("Dissolved")) | (1 << LayerMask.NameToLayer("Entities")))))
             {
                 touchPos = hit.point;
 
                 Event _event = hit.collider.GetComponentInParent<Event>();
+                UnityEngine.Debug.Log(hit.collider);
                 if (_event && _event.IsEnabled())
                 {
                     _touchTarget = _event;
@@ -92,6 +93,11 @@ namespace Crab.Controllers
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawSphere(touchPos, 0.25f);
             }
+        }
+
+
+        public void ResetTarget() {
+            _touchTarget = null;
         }
     }
 }
