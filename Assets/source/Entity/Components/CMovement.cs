@@ -37,8 +37,8 @@ namespace Crab.Components {
             animator = GetComponentInChildren<Animator>();
 
             characterController = GetComponent<CharacterController>();
-
             agent = GetComponent<NavMeshAgent>();
+
             if (agent)
             {
                 agent.stoppingDistance = reachDistance;
@@ -102,13 +102,16 @@ namespace Crab.Components {
                     {
                         agent.destination = agentTarget.position;
                     }
+
                     if (distance >= reachDistance)
                     {
                         agent.Resume();
                     }
                 }
+
+                
             }
-            
+
             //IsMoving
             if (IsMoving())
             {
@@ -127,6 +130,21 @@ namespace Crab.Components {
                     transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(viewDirection), rotateSpeed * Time.deltaTime);
                 }
             }
+
+
+
+            //Animator Speed
+            float animSpeed = 0;
+            Vector3 velocity = agent.velocity;
+            velocity.y = 0;
+            float velocityMag = velocity.magnitude;
+
+            if ((agent && velocityMag > 0.5f) || IsMoving())
+            {
+                animSpeed = velocityMag/speed/2;
+            }
+            animator.SetFloat("Speed", Mathf.Lerp(animator.GetFloat("Speed"), animSpeed, 12 * Time.deltaTime));
+
         }
 
         public bool IsMoving() {
