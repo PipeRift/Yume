@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public enum SwipeType {
+public enum SwipeType
+{
     LEFT,
     RIGHT,
     DOWN,
@@ -14,62 +15,94 @@ public class TouchManager
     public SwipeEvent OnSwipe;
     public TouchEvent OnTouch;
 
-    private Touch initialTouch = new Touch();
-    private float distance = 0;
-    private bool hasSwiped = false;
 
+    private float fingerStartTime = 0.0f;
+    private Vector2 fingerStartPos = Vector2.zero;
 
+    private bool isSwipe = false;
+    private float minSwipeDist = 50.0f;
+    private float maxSwipeTime = 0.5f;
+
+    
     public void Update()
     {
-        for(int i = 0, len = Input.touches.Length; i < len; i++)
+
+        if (Input.touchCount <= 0)
+            return;
+
+        foreach (Touch touch in Input.touches)
         {
-            Touch t = Input.touches[i];
-
-            if (t.phase == TouchPhase.Began)
+            switch (touch.phase)
             {
-                initialTouch = t;
-            }
-            else if (t.phase == TouchPhase.Moved && !hasSwiped)
-            {
-                float deltaX = initialTouch.position.x - t.position.x;
-                float deltaY = initialTouch.position.y - t.position.y;
-                distance = Mathf.Sqrt((deltaX * deltaX) + (deltaY * deltaY));
-                bool swipedSideways = Mathf.Abs(deltaX) > Mathf.Abs(deltaY);
+                case TouchPhase.Began:
+                    /* this is a new touch */
+                    isSwipe = true;
+                    fingerStartTime = Time.time;
+                    fingerStartPos = touch.position;
+                    break;
 
-                if (distance > 100f)
-                {
-                    if (swipedSideways && deltaX > 0) //swiped left
+                case TouchPhase.Canceled:
+                    /* The touch is being canceled */
+                    isSwipe = false;
+                    break;
+
+                case TouchPhase.Ended:
+
+                    float gestureTime = Time.time - fingerStartTime;
+                    float gestureDist = (touch.position - fingerStartPos).magnitude;
+
+                    if (!isSwipe)
+                        return;
+
+                    if (gestureDist <= minSwipeDist)
                     {
-                        if (OnSwipe != null)
-                            OnSwipe(SwipeType.LEFT);
-                    }
-                    else if (swipedSideways && deltaX <= 0) //swiped right
-                    {
-                        if (OnSwipe != null)
-                            OnSwipe(SwipeType.RIGHT);
-                    }
-                    else if (!swipedSideways && deltaY > 0) //swiped down
-                    {
-                        if (OnSwipe != null)
-                            OnSwipe(SwipeType.DOWN);
-                    }
-                    else if (!swipedSideways && deltaY <= 0)  //swiped up
-                    {
-                        if (OnSwipe != null)
-                            OnSwipe(SwipeType.UP);
+                        OnTouch(touch.position);
+                        break;
                     }
 
-                    hasSwiped = true;
-                }
-            }
-            else if (t.phase == TouchPhase.Ended)
-            {
-                if (OnTouch != null)
-                    OnTouch(t.position);
-                initialTouch = new Touch();
-                hasSwiped = false;
+                    if (gestureTime < maxSwipeTime && gestureDist > minSwipeDist)
+                    {
+                        Vector2 direction = touch.position - fingerStartPos;
+                        Vector2 swipeType = Vector2.zero;
+
+                        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
+                        {
+                            // the swipe is horizontal:
+                            swipeType = Vector2.right * Mathf.Sign(direction.x);
+                        }
+                        else {
+                            // the swipe is vertical:
+                            swipeType = Vector2.up * Mathf.Sign(direction.y);
+                        }
+
+                        if (swipeType.x != 0.0f)
+                        {
+                            if (swipeType.x > 0.0f)
+                            {
+                                // MOVE RIGHT
+                                OnSwipe(SwipeType.RIGHT);
+                            }
+                            else {
+                                // MOVE LEFT
+                                OnSwipe(SwipeType.LEFT);
+                            }
+                        }
+
+                        if (swipeType.y != 0.0f)
+                        {
+                            if (swipeType.y > 0.0f)
+                            {
+                                // MOVE UP
+                                OnSwipe(SwipeType.UP);
+                            }
+                            else {
+                                // MOVE DOWN
+                                OnSwipe(SwipeType.DOWN);
+                            }
+                        }
+                    }
+                    break;
             }
         }
     }
-    
 }

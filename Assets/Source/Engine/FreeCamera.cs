@@ -31,7 +31,7 @@ public class FreeCamera : MonoBehaviour {
 
 	void Start()
 	{
-		Screen.lockCursor = true;
+        Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	void Update()

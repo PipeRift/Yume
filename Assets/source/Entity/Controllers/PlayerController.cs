@@ -59,7 +59,6 @@ namespace Crab.Controllers
                 touchPos = hit.point;
 
                 Event _event = hit.collider.GetComponentInParent<Event>();
-                UnityEngine.Debug.Log(hit.collider);
                 if (_event && _event.IsEnabled())
                 {
                     _touchTarget = _event;
