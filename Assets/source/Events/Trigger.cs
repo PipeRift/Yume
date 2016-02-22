@@ -12,6 +12,10 @@ namespace Crab.Events
 
     public class Trigger : MonoBehaviour
     {
+        //Static
+        public static HashSet<Trigger> triggersReady = new HashSet<Trigger>();
+        
+        
         [System.NonSerialized]
         public Collider tCollider;
 
@@ -33,9 +37,22 @@ namespace Crab.Events
         }
 
         void OnTriggerEnter(Collider col) {
+            if(!triggersReady.Contains(this) && checkTouchTarget)
+                triggersReady.Add(this);
+
             if (firedByColliders && IsInLayerMask(col.gameObject, affectedLayers)) {
                 Fire();
             }
+        }
+
+        void OnTriggerExit(Collider col)
+        {
+            triggersReady.Remove(this);
+        }
+
+        void OnDestroy()
+        {
+            triggersReady.Remove(this);
         }
 
         //Start all the events

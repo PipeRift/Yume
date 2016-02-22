@@ -2,6 +2,7 @@
 using System.Collections;
 using Crab.Events;
 using Crab.Components;
+using System.Linq;
 
 namespace Crab.Controllers
 {
@@ -62,6 +63,12 @@ namespace Crab.Controllers
                 if (_event && _event.IsEnabled())
                 {
                     _touchTarget = _event;
+
+                    //Check for triggers inside
+                    foreach (Trigger t in Trigger.triggersReady)
+                    {
+                        if (t) t.Fire();
+                    }
                 }
                 else
                 {
