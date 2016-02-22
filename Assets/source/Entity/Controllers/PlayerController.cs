@@ -76,11 +76,11 @@ namespace Crab.Controllers
         void OnSwipe(SwipeType type) {
             if (type == SwipeType.RIGHT)
             {
-                GameStats.NextRotation();
+                GameStats.PreviousRotation();
             }
             else if(type == SwipeType.LEFT)
             {
-                GameStats.PreviousRotation();
+                GameStats.NextRotation();
             }
         }
 
