@@ -28,6 +28,8 @@
             if (!enabled)
                 return;
 
+            UnityEngine.Debug.Log(this);
+
             if (disableWhenDone)
             {
                 enabled = false;

@@ -42,7 +42,7 @@ namespace Crab.Events
         public void Fire() {
             eventsFired.ForEach(x => {
                 if (x && x.isActiveAndEnabled &&
-                    x == Cache.Get.player.touchTarget)
+                    (!checkTouchTarget || x == Cache.Get.player.touchTarget))
                 {
                     x.SendMessage("StartEvent");
                 }
