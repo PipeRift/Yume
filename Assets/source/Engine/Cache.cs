@@ -6,10 +6,21 @@ public class Cache : MonoBehaviour {
     [Header("Character Prefabs")]
     public PlayerController playerPrefab;
 
-    [Header("References")]
-    public PlayerController player;
-    public CameraController cameraController;
+    public PlayerController player {
+        get {
+            return _player? _player : _player = FindObjectOfType<PlayerController>();
+        }
+    }
+    private PlayerController _player;
 
+    public CameraController cameraController
+    {
+        get
+        {
+            return _cameraController ? _cameraController : _cameraController = FindObjectOfType<CameraController>();
+        }
+    }
+    private CameraController _cameraController;
 
     //Singletone
     private static Cache instance;

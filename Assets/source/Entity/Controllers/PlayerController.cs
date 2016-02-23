@@ -21,7 +21,7 @@ namespace Crab.Controllers
         private Vector3 touchPos;
         private CameraController camControl;
 
-        void Awake()
+        void Start()
         {
             me = GetComponent<Entity>();
             camControl = Cache.Get.cameraController;

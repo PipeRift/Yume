@@ -4,6 +4,11 @@ using Crab.Events;
 
 public class SceneScript : MonoBehaviour
 {
+    public enum GameState {
+        RUNNING,
+        PAUSED
+    }
+
     // Static singleton property
     public static SceneScript Instance { get; private set; }
 
@@ -25,6 +30,20 @@ public class SceneScript : MonoBehaviour
     public PlayerController player;
     [System.NonSerialized]
     new public CameraMovement camera;
+
+    public GameState state
+    {
+        get {
+            return _state;
+        }
+        set
+        {
+            _state = value;
+            Time.timeScale = _state == GameState.PAUSED ? 0 : 1;
+        }
+    }
+
+    private GameState _state = GameState.RUNNING;
 
     void Start()
     {
@@ -50,6 +69,13 @@ public class SceneScript : MonoBehaviour
         Application.LoadLevelAsync(scene);
     }
 
+
+    public void PauseGame() {
+        state = GameState.PAUSED;
+    }
+    public void ResumeGame() {
+        state = GameState.RUNNING;
+    }
 
     //Events
     protected virtual void BeforeGameStart() { }
