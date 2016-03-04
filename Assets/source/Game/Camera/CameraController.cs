@@ -17,12 +17,14 @@ public class CameraController : MonoBehaviour
     public float move = 3;
 
     private float angle;
-    public Camera cam {
-        get { return _cam? _cam : _cam = GetComponentInChildren<Camera>(); }
+    public Camera cam
+    {
+        get { return _cam ? _cam : _cam = GetComponentInChildren<Camera>(); }
     }
     private Camera _cam;
 
-    void Start() {
+    void Start()
+    {
         angle = (int)GameStats.Get.rotationState;
         cam.orthographicSize = size;
 
@@ -63,7 +65,7 @@ public class CameraController : MonoBehaviour
 
     float Incr(float a, float b, float t, float errorRange = 0.5f)
     {
-        float distance = b-a;
+        float distance = b - a;
 
         float dir = Mathf.Clamp(distance, -1, 1);
 
@@ -73,14 +75,19 @@ public class CameraController : MonoBehaviour
             return a + dir * t;
     }
 
-    float IncrAngle(float a, float b, float t, float errorRange = 5f) {
+    float IncrAngle(float a, float b, float t, float errorRange = 1f)
+    {
         float distance = Mathf.DeltaAngle(a, b);
 
         float dir = Mathf.Clamp(distance, -1, 1);
         
-        if (Mathf.Abs(distance) < errorRange)
+        if (Mathf.Abs(distance) < errorRange || t > Mathf.Abs(distance))
+        {
             return b;
+        }
         else
+        {
             return a + dir * t;
+        }
     }
 }
