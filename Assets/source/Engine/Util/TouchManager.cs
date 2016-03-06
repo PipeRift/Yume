@@ -20,8 +20,8 @@ public class TouchManager
     private Vector2 fingerStartPos = Vector2.zero;
 
     private bool isSwipe = false;
-    private float minSwipeDist = 150.0f;
-    private float maxSwipeTime = 1f;
+    private float minSwipeDist = 50.0f;
+    private float maxSwipeTime = 0.5f;
 
     
     public void Update()
@@ -53,7 +53,13 @@ public class TouchManager
 
                     if (!isSwipe)
                         return;
-                    
+
+                    if (gestureDist <= minSwipeDist)
+                    {
+                        OnTouch(touch.position);
+                        break;
+                    }
+
                     if (gestureTime < maxSwipeTime && gestureDist > minSwipeDist)
                     {
                         Vector2 direction = touch.position - fingerStartPos;
@@ -94,10 +100,7 @@ public class TouchManager
                                 OnSwipe(SwipeType.DOWN);
                             }
                         }
-                        break;
                     }
-
-                    OnTouch(touch.position);
                     break;
             }
         }
