@@ -15,15 +15,14 @@ public class TouchManager
     public SwipeEvent OnSwipe;
     public TouchEvent OnTouch;
 
-
     private float fingerStartTime = 0.0f;
     private Vector2 fingerStartPos = Vector2.zero;
 
     private bool isSwipe = false;
     private float minSwipeDist = 50.0f;
-    private float maxSwipeTime = 0.5f;
+    private float maxTouchDist = 10.0f;
+    private float maxSwipeTime = 2f;
 
-    
     public void Update()
     {
 
@@ -54,11 +53,7 @@ public class TouchManager
                     if (!isSwipe)
                         return;
 
-                    if (gestureDist <= minSwipeDist)
-                    {
-                        OnTouch(touch.position);
-                        break;
-                    }
+                    Debug.Log(gestureDist);
 
                     if (gestureTime < maxSwipeTime && gestureDist > minSwipeDist)
                     {
@@ -100,6 +95,12 @@ public class TouchManager
                                 OnSwipe(SwipeType.DOWN);
                             }
                         }
+                        return;
+                    }
+
+                    if(gestureDist < maxTouchDist)
+                    {
+                        OnTouch(touch.position);
                     }
                     break;
             }
