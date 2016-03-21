@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Crab.Controllers;
+using Crab.Events;
 
 public class CameraController : MonoBehaviour
 {
+    public ECameraTarget target;
+
     [Header("Position")]
     public float size = 3;
     public float height = 0;
@@ -15,6 +18,7 @@ public class CameraController : MonoBehaviour
     public float rotate = 150;
     public float zoom = 3;
     public float move = 3;
+    public float targetMove = 3;
 
     private float angle;
     public Camera cam
@@ -39,6 +43,14 @@ public class CameraController : MonoBehaviour
     {
         if (!cam)
             return;
+
+        if (target != null) {
+            if (transform.parent != target.transform)
+                transform.parent = target.transform;
+
+            transform.localPosition = Vector3.Lerp(transform.localPosition, Vector3.zero, targetMove * Time.deltaTime);
+        }
+
 
         if (cam.orthographicSize != size)
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, size, Time.deltaTime * zoom);
