@@ -3,6 +3,7 @@ using System.Collections;
 using Crab.Controllers;
 using Crab.Events;
 
+[ExecuteInEditMode]
 public class CameraController : MonoBehaviour
 {
     public ECameraTarget target;
