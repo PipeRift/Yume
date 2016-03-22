@@ -47,6 +47,10 @@ namespace Crab.Events
 
         void OnTriggerExit(Collider col)
         {
+            eventsFinished.ForEach(x => {
+                if (x && x.isActiveAndEnabled) x.SendMessage("StartEvent");
+            });
+
             triggersReady.Remove(this);
         }
 
@@ -66,9 +70,6 @@ namespace Crab.Events
             });
             eventsEnabled.ForEach(x => {
                 if (x && x.isActiveAndEnabled) x.Enable();
-            });
-            eventsFinished.ForEach(x => {
-                if (x && x.isActiveAndEnabled) x.SendMessage("FinishEvent");
             });
         }
 
