@@ -33,8 +33,14 @@ public class ERockBarrier : MonoBehaviour
     }
     private bool m_second = false;
 
+    private bool done = false;
+
     void Check()
     {
+        if (done)
+            return;
+        done = true;
+
         if (mode == Mode.OR)
         {
             if (m_first || m_second)
@@ -49,5 +55,11 @@ public class ERockBarrier : MonoBehaviour
                 activation.Invoke();
             }
         }
+    }
+
+    public void Reset() {
+        done = false;
+        m_first = false;
+        m_second = false;
     }
 }

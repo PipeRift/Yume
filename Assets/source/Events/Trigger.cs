@@ -36,8 +36,9 @@ namespace Crab.Events
             tCollider.enabled = true;
         }
 
-        void OnTriggerEnter(Collider col) {
-            if(!triggersReady.Contains(this) && checkTouchTarget)
+        void OnTriggerEnter(Collider col)
+        {
+            if (!triggersReady.Contains(this) && checkTouchTarget)
                 triggersReady.Add(this);
 
             if (firedByColliders && IsInLayerMask(col.gameObject, affectedLayers)) {
@@ -60,7 +61,8 @@ namespace Crab.Events
         }
 
         //Start all the events
-        public void Fire() {
+        public void Fire()
+        {
             eventsFired.ForEach(x => {
                 if (x && x.isActiveAndEnabled &&
                     (!checkTouchTarget || x == Cache.Get.player.touchTarget))
