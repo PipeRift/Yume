@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Events;
 
 [ExecuteInEditMode]
 public class EButton : Crab.Event {
@@ -8,7 +8,24 @@ public class EButton : Crab.Event {
         Green,
         Blue
     }
+
+    public static Color GetColor(ColorType color)
+    {
+        switch (color)
+        {
+            case ColorType.Red:
+                return Color.red;
+            case ColorType.Green:
+                return Color.green;
+            case ColorType.Blue:
+                return Color.blue;
+        }
+        return default(Color);
+    }
+
+
     public ColorType color;
+    public ButtonClicked OnClicked;
 
     private new Renderer renderer;
 
@@ -23,18 +40,16 @@ public class EButton : Crab.Event {
         }
     }
 
+    protected override void JustStarted()
+    {
+        OnClicked.Invoke(color);
+    }
 
     void UpdateColor() {
-        switch (color) {
-            case ColorType.Red:
-                renderer.material.SetColor("_Color", Color.red);
-                break;
-            case ColorType.Green:
-                renderer.material.SetColor("_Color", Color.green);
-                break;
-            case ColorType.Blue:
-                renderer.material.SetColor("_Color", Color.blue);
-                break;
-        }
+        renderer.material.SetColor("_Color", GetColor(color));
     }
+
+
+    [System.Serializable]
+    public class ButtonClicked : UnityEvent<ColorType> { };
 }
