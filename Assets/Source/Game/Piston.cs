@@ -3,7 +3,19 @@ using System.Collections;
 
 public class Piston : MonoBehaviour
 {
-    public Color desiredColor = Color.white;
+    public EButton.ColorType color {
+        get {
+            return m_color;
+        }
+
+        set {
+            m_color = value;
+            desiredColor = EButton.GetColor(value);
+        }
+    }
+    private EButton.ColorType m_color;
+    
+    private Color desiredColor = Color.white;
     public float speed = 1;
 
     private new Renderer renderer;

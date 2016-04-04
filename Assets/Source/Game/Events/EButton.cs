@@ -4,21 +4,27 @@ using UnityEngine.Events;
 [ExecuteInEditMode]
 public class EButton : Crab.Event {
     public enum ColorType {
+        White,
         Red,
         Green,
-        Blue
+        Blue,
+        Black
     }
 
     public static Color GetColor(ColorType color)
     {
         switch (color)
         {
+            case ColorType.White:
+                return Color.white;
             case ColorType.Red:
                 return Color.red;
             case ColorType.Green:
                 return Color.green;
             case ColorType.Blue:
                 return Color.blue;
+            case ColorType.Black:
+                return Color.black;
         }
         return default(Color);
     }

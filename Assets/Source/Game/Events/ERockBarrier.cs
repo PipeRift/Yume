@@ -39,13 +39,13 @@ public class ERockBarrier : MonoBehaviour
     {
         if (done)
             return;
-        done = true;
 
         if (mode == Mode.OR)
         {
             if (m_first || m_second)
             {
                 activation.Invoke();
+                done = true;
             }
         }
         else if (mode == Mode.AND)
@@ -53,6 +53,7 @@ public class ERockBarrier : MonoBehaviour
             if (m_first && m_second)
             {
                 activation.Invoke();
+                done = true;
             }
         }
     }
