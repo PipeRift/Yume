@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 [System.Serializable]
 public class ColorCombination {
@@ -24,9 +27,6 @@ public class ColorCombination {
 [CustomPropertyDrawer(typeof(ColorCombination))]
 public class IngredientDrawer : PropertyDrawer
 {
-
-
-
     // Draw the property inside the given rect
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
